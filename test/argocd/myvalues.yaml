@@ -1,0 +1,47 @@
+# helm values source: https://github.com/argoproj/argo-helm/blob/master/charts/argo-cd/values.yaml
+controller:
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+
+server:
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+  # argo-cd config reference: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
+
+config:
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+  application.instanceLabelKey: BradLabeltest
+  dex.config: |
+    connectors:
+      # GitHub example
+      - type: github
+        id: github
+        name: GitHub
+        config:
+          clientID: aabbccddeeff00112233
+          clientSecret: $dex.github.clientSecret
+          orgs:
+          - name: your-github-org
+            teams:
+            - red-team
+    # It is possible to provide custom static client for dex if you want to reuse it
+    # with other services
+    # staticClients:
+    # - id: argo-workflow
+    #   name: Argo Workflow
+    #   redirectURIs:
+    #     - https://argo/oauth2/callback
+    #   secret: $secretReference
+
+
+repoServer:
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
